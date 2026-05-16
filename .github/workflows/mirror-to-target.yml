@@ -1,0 +1,27 @@
+name: Mirror To Target Repo
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Mirror source to target
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+          MIRROR_REPO: ${{ secrets.MIRROR_REPO }}
+        run: |
+          if [ -z "$MIRROR_TOKEN" ] || [ -z "$MIRROR_REPO" ]; then
+            echo "Missing MIRROR_TOKEN or MIRROR_REPO secret"
+            exit 1
+          fi
+
+          git clone --mirror "https://github.com/${GITHUB_REPOSITORY}.git" repo.git
+          cd repo.git
+          git push --mirror "https://x-access-token:${MIRROR_TOKEN}@${MIRROR_REPO}"
