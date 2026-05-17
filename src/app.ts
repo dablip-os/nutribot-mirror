@@ -91,3 +91,6 @@ export function createApp(adapter?: WhatsAppAdapter) {
 
   return app;
 }
+
+const app = createApp();
+export default app;
